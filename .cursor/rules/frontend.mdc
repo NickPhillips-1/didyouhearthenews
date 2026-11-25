@@ -1,0 +1,13 @@
+---
+description: Angular UI boundaries for Did you hear the news
+globs: frontend/**/*.ts,frontend/**/*.html
+alwaysApply: false
+---
+
+# Frontend
+
+- Standalone components. HTTP only in `story-api.service.ts` (`list`, `get`, `create`). `app.config.ts` may call `provideHttpClient`.
+- Do not import `@angular/common/http` from a component. ESLint says to use `StoryApiService`.
+- Bias percents come from `BiasDistribution` (`leftPct`, `centerPct`, `rightPct`). Do not divide counts in a template.
+- Keep `models.ts` field names aligned with the Java DTO records.
+- Dev server proxies `/api` to port 8080. Verification uses `scripts/control-news-rater`, not the operator's port.

@@ -34,9 +34,25 @@ public class BiasDistributionService {
         }
 
         int tracked = left + center + right;
-        int leftPct = pct(left, tracked);
-        int centerPct = pct(center, tracked);
-        int rightPct = tracked == 0 ? 0 : Math.max(0, 100 - leftPct - centerPct);
+        int leftPct = 0;
+        int centerPct = 0;
+        int rightPct = 0;
+        if (tracked > 0) {
+            leftPct = pct(left, tracked);
+            centerPct = pct(center, tracked);
+            // Remainder lands on Right so the three percents sum to 100.
+            // If Left and Center each round up past 100, give the overflow back
+            // to Center, then Left. Untracked stays out of this base.
+            rightPct = 100 - leftPct - centerPct;
+            if (rightPct < 0) {
+                int overflow = -rightPct;
+                int fromCenter = Math.min(centerPct, overflow);
+                centerPct -= fromCenter;
+                overflow -= fromCenter;
+                leftPct -= overflow;
+                rightPct = 0;
+            }
+        }
 
         return new BiasDistributionDto(
                 left, center, right, untracked, tracked,

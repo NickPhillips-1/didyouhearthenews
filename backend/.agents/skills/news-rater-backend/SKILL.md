@@ -10,6 +10,8 @@ description: >
 
 # Did you hear the news — backend
 
+Repo-wide rules, the rule table, and how to prove a change live in the root [AGENTS.md](../../../../AGENTS.md). This file is the backend map. If they disagree, AGENTS.md and the ArchUnit / test checks win.
+
 Intelligent news. A story is one event covered by several outlets. The API returns that event once: fetched articles, a short summary, and how coverage splits Left, Center, and Right. Bias belongs to the outlet, not the article text. The UI brand is "Did you hear the news". The repo, package, and database stay `news-rater` / `com.newsrater`.
 
 The Angular UI lives in `frontend/` and calls this API. See `frontend/.agents/skills/news-rater-frontend` for component and client patterns.

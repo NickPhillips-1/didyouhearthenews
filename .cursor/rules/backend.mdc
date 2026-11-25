@@ -1,0 +1,13 @@
+---
+description: Spring API boundaries for Did you hear the news
+globs: backend/**/*.java
+alwaysApply: false
+---
+
+# Backend
+
+- `controller` calls `StoryService` only. It does not touch repositories. ArchUnit fails the other way.
+- Fetch failure is stored on the article. It does not abort `StoryService.create`.
+- Bias is the outlet's. Untracked domains stay out of the percentage base.
+- `news-rater.flags.image-backfill` and `news-rater.flags.open-api-ui` gate startup refetch and Swagger. Canary uses `application-canary.properties` and its own H2 file.
+- Constructor injection. No field `@Autowired`.

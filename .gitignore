@@ -11,3 +11,16 @@ frontend/.angular/
 # Editor / OS
 .DS_Store
 *.log
+
+# Verification scratch (keep the evidence README)
+artifacts/verify/*
+!artifacts/verify/README.md
+
+# TLA+ tools jar
+formal/tla/.cache/
+
+# jqwik failure database
+backend/.jqwik-database
+
+# App driver
+scripts/control/node_modules/

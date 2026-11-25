@@ -1,5 +1,6 @@
 package com.newsrater.service;
 
+import com.newsrater.config.FeatureFlags;
 import com.newsrater.model.Article;
 import com.newsrater.repository.ArticleRepository;
 import org.slf4j.Logger;
@@ -20,15 +21,21 @@ public class ArticleImageBackfill {
 
     private final ArticleRepository articles;
     private final ArticleFetchService fetchService;
+    private final FeatureFlags flags;
 
-    public ArticleImageBackfill(ArticleRepository articles, ArticleFetchService fetchService) {
+    public ArticleImageBackfill(ArticleRepository articles, ArticleFetchService fetchService, FeatureFlags flags) {
         this.articles = articles;
         this.fetchService = fetchService;
+        this.flags = flags;
     }
 
     @EventListener(ApplicationReadyEvent.class)
     @Transactional
     public void fillMissingImages() {
+        if (!flags.isImageBackfill()) {
+            log.info("story.image-backfill skipped");
+            return;
+        }
         for (Article article : articles.findAll()) {
             boolean missing = article.getImageUrl() == null;
             boolean generic = ArticleFetchService.isGenericImage(article.getImageUrl());

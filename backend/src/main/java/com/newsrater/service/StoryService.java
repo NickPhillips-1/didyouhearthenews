@@ -11,12 +11,16 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /** Orchestrates creating, listing, and reading stories. */
 @Service
 public class StoryService {
+
+    private static final Logger log = LoggerFactory.getLogger(StoryService.class);
 
     private final StoryRepository stories;
     private final ArticleFetchService fetchService;
@@ -61,7 +65,9 @@ public class StoryService {
         story.setSummary(summarizer.summarize(story.getTitle(), story.getArticles()));
 
         Story saved = stories.save(story);
-        return StoryDto.from(saved, distributionService.compute(saved.getArticles()));
+        var distribution = distributionService.compute(saved.getArticles());
+        log.info("story.create urls={} untracked={}", urls.size(), distribution.untracked());
+        return StoryDto.from(saved, distribution);
     }
 
     @Transactional(readOnly = true)
@@ -96,6 +102,7 @@ public class StoryService {
         } else {
             article.setFetchStatus(Article.FetchStatus.FAILED);
             article.setFetchError(result.error());
+            log.info("story.fetch.fail url={} error={}", url, result.error());
             // Keep a readable title even when extraction failed.
             Outlet outlet = article.getOutlet();
             article.setTitle(outlet != null ? outlet.getName() + " \u2013 " + domain : domain);

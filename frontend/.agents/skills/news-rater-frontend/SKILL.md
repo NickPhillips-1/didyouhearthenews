@@ -10,6 +10,8 @@ description: >
 
 # Did you hear the news — frontend
 
+Repo-wide rules, the rule table, and how to prove a change live in the root [AGENTS.md](../../../../AGENTS.md). This file is the frontend map. If they disagree, AGENTS.md and the lint check win.
+
 Intelligent news. The reader sees one event, then how Left, Center, and Right outlets covered it. The brand in the masthead is "Did you hear the news". The repo folder is still `news-rater`.
 
 Angular 18 app that lists stories, creates one from pasted URLs, and shows that coverage. The API is the Spring app in `backend/`. See `backend/.agents/skills/news-rater-backend` for DTOs, ingestion, and bias rules.
