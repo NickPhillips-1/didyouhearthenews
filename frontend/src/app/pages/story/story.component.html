@@ -9,7 +9,7 @@
     <div class="briefing">
       <article class="overview">
         <p class="eyebrow">{{ sourceCount(story.articles.length) }}</p>
-        <h1>{{ story.title }}</h1>
+        <h1 id="story-title">{{ story.title }}</h1>
 
         <div class="side-toggle" role="radiogroup" aria-label="Coverage overview" (keydown)="onOverviewKey($event)">
           @for (side of overviewSides; track side.id) {

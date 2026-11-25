@@ -1,16 +1,16 @@
-<section class="front">
+<section class="front" aria-label="Front page">
   @if (loadingList) {
     <p class="muted">Loading…</p>
   } @else if (listError) {
     <p class="error" role="alert">{{ listError }}</p>
   } @else if (stories.length === 0) {
-    <p class="muted">No stories yet.</p>
+    <p class="muted" role="status">No stories yet.</p>
   } @else if (visibleStories.length === 0) {
     <p class="muted">No stories match {{ activeTopicLabel }}.</p>
   } @else if (lead) {
     <div class="front-top">
       <div class="front-main">
-        <a class="lead" [routerLink]="['/stories', lead.id]">
+        <a class="lead" [routerLink]="['/stories', lead.id]" [attr.aria-label]="'Lead story: ' + lead.title">
           @if (showImage(lead)) {
             <div class="thumb thumb--lead">
               <img [src]="lead.imageUrl" alt="" (error)="hideImage(lead.id)" />

@@ -1,0 +1,86 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - run: mvn -B test
+        working-directory: backend
+
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: node scripts/check-dto-contract.mjs
+      - run: node scripts/check-bias-templates.mjs
+      - run: node scripts/check-frontend-boundaries.mjs
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+        working-directory: frontend
+      - run: npx ng lint
+        working-directory: frontend
+      - run: npm test -- --watch=false
+        working-directory: frontend
+      - run: npm run build
+        working-directory: frontend
+
+  tla:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - run: bash scripts/run-tla.sh
+
+  verify-home:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+        working-directory: frontend
+      - run: npm ci
+        working-directory: scripts/control
+      - run: npx playwright install --with-deps chromium
+        working-directory: scripts/control
+      - run: |
+          scripts/control-news-rater up
+          scripts/control-news-rater doctor
+          scripts/control-news-rater goto /
+          scripts/control-news-rater expect --text "No stories yet"
+          scripts/control-news-rater screenshot artifacts/verify/evidence/home-empty.png
+          scripts/control-news-rater down
+          test -f artifacts/verify/evidence/home-empty.png
