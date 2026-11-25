@@ -1,0 +1,119 @@
+<section class="front">
+  @if (loadingList) {
+    <p class="muted">Loading…</p>
+  } @else if (listError) {
+    <p class="error" role="alert">{{ listError }}</p>
+  } @else if (stories.length === 0) {
+    <p class="muted">No stories yet.</p>
+  } @else if (visibleStories.length === 0) {
+    <p class="muted">No stories match {{ activeTopicLabel }}.</p>
+  } @else if (lead) {
+    <div class="front-top">
+      <div class="front-main">
+        <a class="lead" [routerLink]="['/stories', lead.id]">
+          @if (showImage(lead)) {
+            <div class="thumb thumb--lead">
+              <img [src]="lead.imageUrl" alt="" (error)="hideImage(lead.id)" />
+            </div>
+          }
+          <p class="kicker">{{ activeTopicLabel }}</p>
+          <h1 class="story-title story-title--lead">{{ lead.title }}</h1>
+        </a>
+
+        @if (developingStories.length > 0) {
+          <section class="developing" aria-label="Developing">
+            <h2>Developing</h2>
+            <ul>
+              @for (story of developingStories; track story.id) {
+                <li>
+                  <a [routerLink]="['/stories', story.id]">{{ story.title }}</a>
+                </li>
+              }
+            </ul>
+          </section>
+        }
+
+        @if (columnStories.length > 0) {
+          <div class="column-stack">
+            @for (story of columnStories; track story.id) {
+              <a class="stack-item" [routerLink]="['/stories', story.id]">
+                <h2 class="story-title">{{ story.title }}</h2>
+                <app-bias-bar [distribution]="story.distribution" appearance="strip"></app-bias-bar>
+                <p class="source-count source-count--below">{{ sourceCount(story.articleCount) }}</p>
+              </a>
+            }
+          </div>
+        }
+      </div>
+
+      <aside class="news-rail" aria-label="Top news stories">
+        @if (leadCurve) {
+          <a
+            class="rail-curve"
+            [routerLink]="['/stories', lead.id]"
+            [attr.aria-label]="'Bias distribution for ' + lead.title"
+          >
+            <app-bias-distribution
+              [articles]="leadCurve.articles"
+              [distribution]="leadCurve.distribution"
+              [interactive]="false"
+            ></app-bias-distribution>
+          </a>
+        }
+        <h2>Top News Stories</h2>
+        <ul>
+          @for (story of railStories; track story.id) {
+            <li>
+              <a
+                class="rail-item"
+                [class.is-current]="story.id === lead.id"
+                [routerLink]="['/stories', story.id]"
+              >
+                <span class="rail-title">{{ story.title }}</span>
+                <span class="rail-meta">
+                  <span class="rail-bar" aria-hidden="true">
+                    @if (story.distribution.trackedTotal > 0) {
+                      @if (story.distribution.leftPct > 0) {
+                        <span class="seg left" [style.flex-grow]="story.distribution.leftPct"></span>
+                      }
+                      @if (story.distribution.centerPct > 0) {
+                        <span class="seg center" [style.flex-grow]="story.distribution.centerPct"></span>
+                      }
+                      @if (story.distribution.rightPct > 0) {
+                        <span class="seg right" [style.flex-grow]="story.distribution.rightPct"></span>
+                      }
+                    }
+                  </span>
+                  <span class="rail-coverage">{{ coverageLine(story) }}</span>
+                </span>
+              </a>
+            </li>
+          }
+        </ul>
+      </aside>
+    </div>
+
+    @if (restStories.length > 0) {
+      <section class="more">
+        <div class="section-rule">
+          <h2>More top stories</h2>
+          <span class="section-note">Illustrative stories</span>
+        </div>
+        <div class="more-grid">
+          @for (story of restStories; track story.id) {
+            <a class="more-item" [routerLink]="['/stories', story.id]">
+              @if (showImage(story)) {
+                <div class="thumb thumb--more">
+                  <img [src]="story.imageUrl" alt="" (error)="hideImage(story.id)" />
+                </div>
+              }
+              <h2 class="story-title">{{ story.title }}</h2>
+              <app-bias-bar [distribution]="story.distribution" appearance="strip"></app-bias-bar>
+              <p class="source-count source-count--below">{{ sourceCount(story.articleCount) }}</p>
+            </a>
+          }
+        </div>
+      </section>
+    }
+  }
+</section>

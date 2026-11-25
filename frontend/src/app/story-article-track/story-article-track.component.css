@@ -1,0 +1,264 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.carousel {
+  min-width: 0;
+  background: #ffffff;
+  outline: none;
+}
+
+.carousel:focus-visible {
+  outline: 2px solid var(--story-focus, #0047bb);
+  outline-offset: 4px;
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.head h2 {
+  margin: 0;
+  font-family: var(--story-font, var(--font-sans));
+  font-size: 22px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: #0a0a0a;
+}
+
+.head p {
+  margin: 4px 0 0;
+  font-family: var(--story-font, var(--font-sans));
+  font-size: 16px;
+  line-height: 1.4;
+  color: #6b7280;
+}
+
+.arrows {
+  display: flex;
+  gap: 8px;
+  flex: none;
+}
+
+.arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid #e5e7eb;
+  border-radius: 0;
+  background: #ffffff;
+  color: #111827;
+  cursor: pointer;
+}
+
+.arrow:hover:not(:disabled) {
+  border-color: #d1d5db;
+}
+
+.arrow:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.arrow:focus-visible,
+.outlet:focus-visible,
+.pick:focus-visible {
+  outline: 2px solid var(--story-focus, #0047bb);
+  outline-offset: 2px;
+}
+
+.viewport {
+  container-type: inline-size;
+  overflow: hidden;
+  touch-action: pan-y;
+  background: #ffffff;
+}
+
+.row {
+  display: flex;
+  align-items: stretch;
+  gap: var(--gap);
+  height: 500px;
+  transition: transform 450ms ease;
+}
+
+.row.is-dragging {
+  transition: none;
+}
+
+.card {
+  position: relative;
+  flex: 0 0 var(--strip);
+  height: 500px;
+  border-radius: 0;
+  overflow: hidden;
+  background: #ffffff;
+  transition: flex-basis 450ms ease;
+}
+
+.card.is-wide {
+  display: flex;
+  flex-direction: column;
+  flex-basis: calc(100cqi - var(--strip) - var(--gap) - 36px);
+  border: 1px solid #e5e7eb;
+}
+
+.carousel.is-single .card.is-wide {
+  flex-basis: 100cqi;
+}
+
+.row.is-dragging .card {
+  transition: none;
+}
+
+.card.is-plain {
+  border: 1px solid #e5e7eb;
+}
+
+.frame {
+  position: absolute;
+  inset: 0;
+}
+
+.card.is-wide:not(.is-plain)::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 42%;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.62));
+  pointer-events: none;
+}
+
+.photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.pill {
+  position: absolute;
+  z-index: 2;
+  top: 16px;
+  right: 16px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  color: #ffffff;
+  font-family: var(--story-font, var(--font-sans));
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: #6b7280;
+}
+
+.pill[data-bias='LEFT'],
+.pill[data-bias='LEAN_LEFT'] {
+  background: var(--color-bias-left);
+}
+
+.pill[data-bias='RIGHT'],
+.pill[data-bias='LEAN_RIGHT'] {
+  background: var(--color-bias-right);
+}
+
+.pill[data-bias='CENTER'] {
+  background: var(--color-bias-center);
+}
+
+.pill[data-bias='UNTRACKED'] {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.caption {
+  position: absolute;
+  z-index: 2;
+  left: 20px;
+  right: 20px;
+  bottom: 18px;
+  color: #ffffff;
+}
+
+.card.is-plain .caption {
+  color: #111827;
+}
+
+.outlet {
+  margin: 0;
+  color: inherit;
+  font-family: var(--story-font, var(--font-sans));
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.outlet:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.pick {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.pick:focus-visible {
+  outline-offset: -3px;
+}
+
+.fallback-name {
+  padding: 14px;
+  color: #111827;
+  font-family: var(--story-font, var(--font-sans));
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.3;
+  text-align: left;
+}
+
+@media (max-width: 640px) {
+  .row,
+  .card {
+    height: 400px;
+  }
+
+  .caption {
+    left: 16px;
+    right: 16px;
+    bottom: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row,
+  .card {
+    transition: none;
+  }
+}

@@ -1,0 +1,69 @@
+@if (distribution.trackedTotal > 0) {
+  <div
+    class="bar"
+    [class.compact]="compact && !isStrip"
+    [class.strip]="isStrip"
+    [class.has-selection]="selected"
+  >
+    @for (side of sides; track side.id) {
+      @if (pct(side) > 0) {
+        @if (selectable) {
+          <button
+            type="button"
+            class="seg {{ side.id.toLowerCase() }}"
+            [class.selected]="selected === side.id"
+            [style.flex-grow]="pct(side)"
+            [attr.aria-pressed]="selected === side.id"
+            [attr.aria-label]="side.label + ' ' + pct(side) + '%'"
+            (click)="choose(side.id)"
+          ></button>
+        } @else {
+          <div class="seg {{ side.id.toLowerCase() }}" [style.flex-grow]="pct(side)" [title]="side.label + ' ' + pct(side) + '%'"></div>
+        }
+      }
+    }
+  </div>
+} @else if (isStrip) {
+  <p class="strip-empty">No tracked sources</p>
+} @else {
+  <div class="bar empty" [class.compact]="compact">
+    <span>No tracked sources</span>
+  </div>
+}
+
+@if (isStrip && distribution.trackedTotal > 0) {
+  <div class="strip-foot">
+    <div class="strip-labels">
+      <span class="left">Left {{ distribution.leftPct }}%</span>
+      <span class="center">Center {{ distribution.centerPct }}%</span>
+      <span class="right">Right {{ distribution.rightPct }}%</span>
+    </div>
+    <ng-content></ng-content>
+  </div>
+} @else if (!compact && !isStrip) {
+  <div class="legend" [class.has-selection]="selected">
+    @for (side of sides; track side.id; let last = $last) {
+      @if (selectable && pct(side) > 0) {
+        <button
+          type="button"
+          class="legend-item"
+          [class.selected]="selected === side.id"
+          [attr.aria-pressed]="selected === side.id"
+          (click)="choose(side.id)"
+        >
+          <span class="dot {{ side.id.toLowerCase() }}"></span>{{ side.label }} {{ pct(side) }}%
+        </button>
+      } @else {
+        <span class="legend-item">
+          <span class="dot {{ side.id.toLowerCase() }}"></span>{{ side.label }} {{ pct(side) }}%
+        </span>
+      }
+      @if (!last) {
+        <span class="dot-sep">·</span>
+      }
+    }
+    @if (distribution.untracked > 0) {
+      <span class="untracked">· {{ distribution.untracked }} untracked (excluded)</span>
+    }
+  </div>
+}

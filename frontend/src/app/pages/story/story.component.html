@@ -1,0 +1,88 @@
+<div class="story-page">
+  <a class="back" routerLink="/">All stories</a>
+
+  @if (loading) {
+    <p class="muted">Loading…</p>
+  } @else if (error) {
+    <p class="error" role="alert">{{ error }}</p>
+  } @else if (story) {
+    <div class="briefing">
+      <article class="overview">
+        <p class="eyebrow">{{ sourceCount(story.articles.length) }}</p>
+        <h1>{{ story.title }}</h1>
+
+        <div class="side-toggle" role="radiogroup" aria-label="Coverage overview" (keydown)="onOverviewKey($event)">
+          @for (side of overviewSides; track side.id) {
+            <button
+              type="button"
+              role="radio"
+              [id]="'overview-' + side.id"
+              [attr.data-side]="side.id"
+              [class.is-selected]="overviewSide === side.id"
+              [class.is-empty]="!sideHasCoverage(side.id)"
+              [attr.aria-checked]="overviewSide === side.id"
+              (click)="setOverviewSide(side.id)"
+            >
+              {{ side.label }}
+            </button>
+          }
+        </div>
+
+        @if (briefing().length > 0) {
+          <div class="lede">
+            @for (line of briefing(); track line.id) {
+              <p class="sentence" [class.is-current]="line.id === selectedArticleId">
+                <span>{{ line.text }}</span>
+                <a class="chip" [href]="line.url" target="_blank" rel="noopener" [attr.data-bias]="line.bias">
+                  <span class="pip" aria-hidden="true"></span>
+                  {{ line.outlet }}
+                </a>
+              </p>
+            }
+          </div>
+        } @else {
+          <p class="muted">{{ emptyOverview() }}</p>
+        }
+      </article>
+
+      <aside class="rail" aria-label="Coverage">
+        <app-bias-distribution
+          [articles]="articles"
+          [distribution]="story.distribution"
+          [selectedId]="selectedArticleId"
+          (selectArticle)="selectArticle($event)"
+        ></app-bias-distribution>
+
+        <section class="block">
+          <h2>Evidence</h2>
+          <ul class="evidence">
+            @for (article of articles; track article.id) {
+              <li [class.is-current]="article.id === selectedArticleId">
+                <button type="button" class="evidence-name" (click)="selectArticle(article.id)">
+                  {{ article.outletName }}
+                </button>
+                <span class="pill" [attr.data-bias]="article.bias">{{ article.biasLabel }}</span>
+                <span class="evidence-links">
+                  <a class="ghost" [href]="article.url" target="_blank" rel="noopener">Original</a>
+                  <a class="ghost" [href]="factCheck(article)" target="_blank" rel="noopener">Search fact checks</a>
+                </span>
+              </li>
+            }
+          </ul>
+        </section>
+      </aside>
+    </div>
+
+    @if (articles.length > 0) {
+      <section class="magazine" aria-label="Sources">
+        <p class="sr-only" aria-live="polite">{{ liveMessage }}</p>
+
+        <app-story-article-track
+          [articles]="articles"
+          [selectedId]="selectedArticleId"
+          (selectedChange)="selectArticle($event)"
+        ></app-story-article-track>
+      </section>
+    }
+  }
+</div>

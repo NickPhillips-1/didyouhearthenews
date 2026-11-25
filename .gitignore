@@ -1,0 +1,13 @@
+# Backend (Maven / H2)
+backend/target/
+backend/data/
+*.class
+
+# Frontend (Angular / Node)
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+
+# Editor / OS
+.DS_Store
+*.log

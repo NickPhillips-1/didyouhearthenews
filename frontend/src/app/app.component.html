@@ -1,0 +1,102 @@
+<header class="site-header">
+  <div class="topbar">
+    <div class="topbar-inner">
+      <a routerLink="/" class="brand">
+        <span class="brand-mark">Did you hear</span><span class="brand-accent">the news</span>
+      </a>
+      <p class="edition-line">
+        <span class="date">{{ today | date: 'EEEE, MMMM d, y' }}</span>
+        <span class="sep" aria-hidden="true">|</span>
+        <span class="edition">US Edition</span>
+      </p>
+    </div>
+  </div>
+  <nav class="topic-row" aria-label="Topics" (focusout)="onFocusOut($event)">
+    <div class="topic-row-inner" (scroll)="closeMenu()">
+      @for (topic of topics; track topic.id) {
+        <button
+          type="button"
+          class="topic-link"
+          [attr.data-topic-id]="topic.id"
+          [class.is-selected]="topic.id === selectedTopicId"
+          [attr.aria-pressed]="topic.id === selectedTopicId"
+          [attr.aria-expanded]="topic.groups.length ? openTopicId === topic.id : null"
+          [attr.aria-controls]="topic.groups.length ? 'topic-panel' : null"
+          (mouseenter)="openMenu(topic, $event)"
+          (mouseleave)="scheduleClose()"
+          (focus)="openMenu(topic, $event)"
+          (keydown)="onChipKeydown($event, topic)"
+          (click)="selectTopic(topic)"
+        >
+          <span>{{ topic.label }}</span>
+          @if (topic.groups.length) {
+            <span class="topic-caret" aria-hidden="true"></span>
+          }
+        </button>
+      }
+    </div>
+    @if (openTopic; as topic) {
+      <div
+        id="topic-panel"
+        class="topic-panel"
+        role="region"
+        [attr.aria-label]="topic.label + ' topics'"
+        [style.top.px]="panelTop"
+        [style.left.px]="panelLeft"
+        (mouseenter)="cancelClose()"
+        (mouseleave)="scheduleClose()"
+        (keydown)="onPanelKeydown($event, topic)"
+      >
+        @for (column of topic.groups; track column.label) {
+          <div class="topic-panel-col">
+            <p class="topic-panel-heading">{{ column.label }}</p>
+            @for (subtopic of column.subtopics; track subtopic.id) {
+              <button
+                type="button"
+                class="topic-panel-link"
+                [attr.aria-current]="isCurrentSubtopic(topic, subtopic) ? 'true' : null"
+                (click)="selectSubtopic(topic, subtopic)"
+              >
+                {{ subtopic.label }}
+              </button>
+            }
+          </div>
+        }
+      </div>
+    }
+  </nav>
+</header>
+<main class="container">
+  <router-outlet></router-outlet>
+</main>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand-block">
+        <a routerLink="/" class="brand footer-brand">
+          <span class="brand-mark">Did you hear</span><span class="brand-accent">the news</span>
+        </a>
+        <p class="footer-tagline">The same story, told from every side.</p>
+      </div>
+      @for (column of footerColumns; track column.label) {
+        <nav class="footer-col" [attr.aria-label]="column.label">
+          <p class="footer-heading">{{ column.label }}</p>
+          @for (topic of column.topics; track topic.id) {
+            <a
+              class="footer-link"
+              [class.is-current]="topic.id === selectedTopicId"
+              [attr.aria-current]="topic.id === selectedTopicId ? 'page' : null"
+              routerLink="/"
+              [queryParams]="topicQuery(topic)"
+            >{{ topic.label }}</a>
+          }
+        </nav>
+      }
+    </div>
+    <p class="footer-legal">
+      <span>© {{ today | date: 'y' }} Did you hear the news</span>
+      <span class="sep" aria-hidden="true">|</span>
+      <span>US Edition</span>
+    </p>
+  </div>
+</footer>

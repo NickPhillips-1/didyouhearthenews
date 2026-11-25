@@ -1,0 +1,39 @@
+<article class="article-card" [class]="'skin-' + skin().id" [class.density-spread]="density === 'spread'">
+  <div class="rating">
+    <app-bias-bar [distribution]="sourceDistribution()" [compact]="true"></app-bias-bar>
+    <span class="rating-label" [class]="'bias-' + article.bias.toLowerCase()">{{ article.biasLabel }}</span>
+  </div>
+
+  <div class="paper">
+    <div class="masthead">{{ wordmark() }}</div>
+    <div class="rule"></div>
+
+    @if (article.imageUrl && !imageHidden) {
+      <a class="hero" [href]="article.url" target="_blank" rel="noopener">
+        <img [src]="article.imageUrl" [alt]="article.title || ''" draggable="false" (error)="hideImage()" />
+      </a>
+    }
+
+    <span class="kicker">{{ skin().kicker }}</span>
+
+    <a class="headline" [href]="article.url" target="_blank" rel="noopener">
+      {{ article.title || article.url }}
+    </a>
+
+    @if (article.excerpt) {
+      <p class="dek">{{ article.excerpt }}</p>
+    }
+
+    <div class="byline">
+      <span class="domain">{{ article.domain }}</span>
+      @if (article.publishedAt) {
+        <span class="dot-sep">·</span>
+        <span class="date">{{ article.publishedAt | date: 'mediumDate' }}</span>
+      }
+    </div>
+
+    @if (article.fetchStatus === 'FAILED') {
+      <span class="fetch-error" [title]="article.fetchError || ''">Could not fetch content</span>
+    }
+  </div>
+</article>

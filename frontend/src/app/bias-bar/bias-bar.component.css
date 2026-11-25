@@ -1,0 +1,224 @@
+:host {
+  display: block;
+  min-width: 0;
+  container-type: inline-size;
+}
+
+.bar {
+  display: flex;
+  width: 100%;
+  height: 4px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--color-bias-track);
+  gap: 1px;
+}
+
+.seg {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary-contrast);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.seg:first-child {
+  border-radius: 999px 0 0 999px;
+}
+
+.seg:last-child {
+  border-radius: 0 999px 999px 0;
+}
+
+.seg:first-child:last-child {
+  border-radius: 999px;
+}
+
+button.seg {
+  appearance: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-primary-contrast);
+  cursor: pointer;
+  min-width: 0;
+}
+
+button.seg:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--color-primary-contrast);
+  z-index: 1;
+}
+
+.seg.selected {
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.95);
+}
+
+.bar.has-selection .seg:not(.selected) {
+  opacity: 0.4;
+}
+
+.seg.left {
+  background: var(--color-bias-left);
+}
+
+.seg.center {
+  background: var(--color-bias-center);
+}
+
+.seg.right {
+  background: var(--color-bias-right);
+}
+
+.bar.empty {
+  height: auto;
+  min-height: 24px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  color: var(--color-text-muted);
+  font-size: 11px;
+}
+
+.strip-empty {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.strip-foot {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-top: 8px;
+  min-width: 0;
+}
+
+.strip-labels {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: clamp(4px, 2cqi, 12px);
+  min-width: 0;
+  flex-wrap: nowrap;
+  font-family: var(--font-sans);
+  /* One row, aligned with the bar. Shrink slightly in the narrow story column. */
+  font-size: clamp(12px, 7cqi, 13px);
+  font-weight: 600;
+}
+
+.strip-labels span {
+  flex: none;
+  white-space: nowrap;
+}
+
+/* A column this narrow cannot hold three labels in a row. Stack them instead of
+   letting space-between shove Center to the right and Right onto the next line. */
+@container (max-width: 168px) {
+  .strip-labels {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 720px) {
+  .strip-foot {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+}
+
+.strip-labels .left {
+  color: var(--color-bias-left-text);
+}
+
+.strip-labels .center {
+  color: var(--color-bias-center-text);
+}
+
+.strip-labels .right {
+  color: var(--color-bias-right-text);
+}
+
+.legend {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 600;
+}
+
+button.legend-item {
+  appearance: none;
+  margin: 0;
+  padding: 2px 6px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: inherit;
+  cursor: pointer;
+}
+
+button.legend-item:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+button.legend-item[aria-pressed='true'] {
+  background: color-mix(in srgb, var(--color-text) 8%, transparent);
+}
+
+.legend.has-selection .legend-item:not(.selected) {
+  opacity: 0.45;
+}
+
+.dot-sep {
+  color: var(--color-border-strong);
+}
+
+.dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.dot.left {
+  background: var(--color-bias-left);
+}
+
+.dot.center {
+  background: var(--color-bias-center);
+}
+
+.dot.right {
+  background: var(--color-bias-right);
+}
+
+.untracked {
+  color: var(--color-text-faint);
+  font-weight: 500;
+}

@@ -1,0 +1,56 @@
+<section
+  class="carousel"
+  [class.is-single]="articles.length < 2"
+  tabindex="0"
+  role="region"
+  aria-roledescription="carousel"
+  aria-labelledby="source-carousel-title"
+  [style.--strip.px]="strip"
+  [style.--gap.px]="gap"
+  (keydown)="onKey($event)"
+>
+  <div class="head">
+    <div>
+      <h2 id="source-carousel-title">Sources</h2>
+      <p>See how each outlet tells it.</p>
+    </div>
+    <div class="arrows">
+      <button type="button" class="arrow" aria-label="Previous source" [disabled]="atStart" (click)="step(-1)">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+          <path d="M10 3.5 5.5 8 10 12.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+      <button type="button" class="arrow" aria-label="Next source" [disabled]="atEnd" (click)="step(1)">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+          <path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="viewport" (pointerdown)="onPointerDown($event)" (click)="onClick($event)">
+    <div class="row" [class.is-dragging]="dragging" [style.transform]="rowTransform">
+      @for (article of articles; track article.id) {
+        <article class="card" [class.is-wide]="isWide(article)" [class.is-plain]="!showImage(article)">
+          @if (showImage(article)) {
+            <div class="frame">
+              <img class="photo" [src]="article.imageUrl" alt="" draggable="false" (error)="hideImage(article.id)" />
+            </div>
+          }
+          @if (isWide(article)) {
+            <span class="pill" [attr.data-bias]="article.bias">{{ article.biasLabel }}</span>
+            <div class="caption">
+              <a class="outlet" [href]="article.url" target="_blank" rel="noopener">{{ article.outletName }}</a>
+            </div>
+          } @else {
+            <button type="button" class="pick" [attr.aria-label]="'Show ' + article.outletName" (click)="select(article.id)">
+              @if (!showImage(article)) {
+                <span class="fallback-name" aria-hidden="true">{{ article.outletName }}</span>
+              }
+            </button>
+          }
+        </article>
+      }
+    </div>
+  </div>
+</section>

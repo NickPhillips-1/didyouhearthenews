@@ -1,0 +1,48 @@
+<section class="dist" aria-labelledby="bias-dist-label">
+  <h2 id="bias-dist-label">Bias distribution</h2>
+  <p class="summary">{{ summary }}</p>
+
+  @if (barSides.length > 0) {
+    <div class="bar" role="img" [attr.aria-label]="summary">
+      @for (side of barSides; track side.id) {
+        <span class="seg {{ side.id }}" [style.flex-grow]="side.pct">{{ side.label }} {{ side.pct }}%</span>
+      }
+    </div>
+  }
+
+  <div class="columns" role="group" aria-label="Sources by lean">
+    @for (column of columns; track column.id) {
+      <div class="col" [attr.data-bias]="column.id">
+        @for (article of column.shown; track article.id) {
+          @if (interactive) {
+            <button
+              type="button"
+              class="mark"
+              [class.is-current]="article.id === activeId"
+              [attr.aria-current]="article.id === activeId ? 'true' : null"
+              [attr.aria-label]="article.outletName + ', ' + article.biasLabel"
+              (click)="choose(article.id)"
+            >
+              @if (logo(article); as src) {
+                <img class="logo" [src]="src" alt="" (error)="hideLogo(article.domain)" />
+              } @else {
+                {{ mark(article) }}
+              }
+            </button>
+          } @else {
+            <span class="mark">
+              @if (logo(article); as src) {
+                <img class="logo" [src]="src" alt="" (error)="hideLogo(article.domain)" />
+              } @else {
+                {{ mark(article) }}
+              }
+            </span>
+          }
+        }
+        @if (column.extra > 0) {
+          <span class="extra">+{{ column.extra }}</span>
+        }
+      </div>
+    }
+  </div>
+</section>

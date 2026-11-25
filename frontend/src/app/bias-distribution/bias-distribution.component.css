@@ -1,0 +1,161 @@
+:host {
+  display: block;
+}
+
+h2,
+.summary,
+.seg,
+.mark,
+.extra {
+  font-family: var(--story-font, 'Inter', var(--font-sans));
+}
+
+h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--story-ink, #0a0a0a);
+}
+
+.summary {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--story-secondary, #3a3a3a);
+}
+
+.summary::before {
+  content: '• ';
+}
+
+.bar {
+  display: flex;
+  height: 28px;
+  margin-top: 12px;
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--story-hairline, #eceae4);
+}
+
+.seg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  padding: 0 6px;
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.seg.left {
+  background: #c5d7fb;
+  color: #1e3a8a;
+}
+
+.seg.center {
+  background: #f7f7f5;
+  color: var(--story-ink, #0a0a0a);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, #0a0a0a 8%, transparent);
+}
+
+.seg.right {
+  background: #f3c7c7;
+  color: #7f1d1d;
+}
+
+.columns {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  margin-top: 16px;
+}
+
+.col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  min-height: 72px;
+  padding: 10px 2px;
+  border-radius: 999px;
+}
+
+.col[data-bias='LEFT'] {
+  background: #d7e4fb;
+}
+
+.col[data-bias='LEAN_LEFT'] {
+  background: #e7effc;
+}
+
+.col[data-bias='CENTER'] {
+  background: #fff;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, #0a0a0a 10%, transparent);
+}
+
+.col[data-bias='LEAN_RIGHT'] {
+  background: #f8e4e4;
+}
+
+.col[data-bias='RIGHT'] {
+  background: #f3cfcf;
+}
+
+.mark,
+.extra {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 1px color-mix(in srgb, #0a0a0a 8%, transparent);
+  color: var(--story-ink, #0a0a0a);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.mark .logo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.extra {
+  background: color-mix(in srgb, #0a0a0a 8%, #fff);
+  font-size: 11px;
+  cursor: default;
+}
+
+.mark.is-current {
+  box-shadow: 0 0 0 2px var(--story-ink, #0a0a0a);
+}
+
+.mark:focus-visible {
+  outline: 2px solid var(--story-focus, #0047bb);
+  outline-offset: 2px;
+}
+
+.mark:active {
+  transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mark:active {
+    transform: none;
+  }
+}
